@@ -8,21 +8,21 @@ ARG BUILDPLATFORM
 RUN echo "Building for TARGETPLATFORM: $TARGETPLATFORM, ARCH: $TARGETARCH, on BUILDPLATFORM: $BUILDPLATFORM"
 
 # Set working directory
-WORKDIR /worker
+WORKDIR /app
 
-# Copy the project file and restore dependencies
-COPY ./worker/*.csproj ./
+# Copy only the project file first, then restore dependencies
+COPY Worker.csproj .  # Adjusted to match the actual file name
 RUN dotnet restore --arch $TARGETARCH
 
-# Copy the entire source code and build the application
-COPY ./worker .
+# Copy the rest of the source code
+COPY . .  # Copies everything inside 'worker' if the build context is correct
 RUN dotnet publish -c Release -o /app --self-contained false --no-restore
 
 # Stage 2: Create a minimal runtime image
 FROM mcr.microsoft.com/dotnet/runtime:7.0
 WORKDIR /app
 
-# Copy compiled application from build stage
+# Copy compiled application from the build stage
 COPY --from=build /app .
 
 # Set the entry point
