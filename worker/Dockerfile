@@ -15,7 +15,7 @@ COPY ./worker/*.csproj ./
 RUN dotnet restore --arch $TARGETARCH
 
 # Copy the entire source code and build the application
-COPY ./worker
+COPY ./worker .
 RUN dotnet publish -c Release -o /app --self-contained false --no-restore
 
 # Stage 2: Create a minimal runtime image
