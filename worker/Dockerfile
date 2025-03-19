@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /source
 
 # Copy only the project file to optimize build caching
-COPY ./app/*.csproj ./
+COPY *.csproj ./
 
 # Restore dependencies using the correct architecture flag
 RUN dotnet restore 
